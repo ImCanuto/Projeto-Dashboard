@@ -1,0 +1,103 @@
+/* Definições básicas */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f0f0f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-top: 20px;
+    font-weight: 300;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    font-weight: 300;
+}
+
+p {
+    font-size: 16px;
+    margin: 10px 0;
+    text-align: center;
+}
+
+a {
+    display: block;
+    text-align: center;
+    margin: 20px 0;
+    color: #008cc8;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Estilização da tabela */
+table {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+th {
+    background-color: #008cc8;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+/* Estilização dos dados */
+td {
+    border-bottom: 1px solid #e0e0e0;
+    color: #555;
+}
+
+th:first-child, td:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+th:last-child, td:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+@media (max-width: 600px) {
+    table {
+        width: 100%;
+    }
+
+    th, td {
+        padding: 10px;
+    }
+
+    th {
+        font-size: 12px;
+    }
+
+    td {
+        font-size: 14px;
+    }
+}

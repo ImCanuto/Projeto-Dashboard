@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Processo</title>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+        function getQueryParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        function fetchProcessDetails(pid) {
+            fetch('process_data.json')
+                .then(response => response.json())
+                .then(data => {
+                    const process = data.find(p => p.pid == pid);
+                    if (process) {
+                        document.getElementById('details').innerHTML = `
+                            <h2>Detalhes do Processo: ${process.pid}</h2>
+                            <p><strong>Usuário:</strong> ${process.user}</p>
+                            <p><strong>Nome:</strong> ${process.name}</p>
+                            <p><strong>CPU:</strong> ${process.cpu.toFixed(2)}%</p>
+                            <p><strong>Memória:</strong> ${process.memory.toFixed(2)} KB</p>
+                            <p><strong>Threads:</strong> ${process.threads}</p>
+                        `;
+                    } else {
+                        document.getElementById('details').innerHTML = '<p>Processo não encontrado.</p>';
+                    }
+                });
+        }
+
+        window.onload = () => {
+            const pid = getQueryParameter('pid');
+            if (pid) {
+                fetchProcessDetails(pid);
+            } else {
+                document.getElementById('details').innerHTML = '<p>PID não fornecido.</p>';
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Detalhes do Processo</h1>
+    <div id="details"></div>
+    <a href="index.html">Voltar</a>
+</body>
+</html>
