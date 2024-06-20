@@ -9,7 +9,7 @@
 #include <sys/sysinfo.h>
 #include <pthread.h>
 
-#define INTERVAL 5 // tempo de atualizacao
+#define INTERVAL 5 // tempo de atualização
 
 typedef struct {
     int pid;
@@ -31,6 +31,7 @@ void getUserFromUid(uid_t uid, char *username) {
 }
 
 // fetch da lista de processos
+// essa parte meu amigo me ajudou pq eu não estava conseguindo acessar os dados necessários para gerar o JSON
 void fetchProcessList(Process *processes, int *numProcesses) {
     struct dirent *entry;
     DIR *dp = opendir("/proc");
@@ -49,7 +50,7 @@ void fetchProcessList(Process *processes, int *numProcesses) {
                 fclose(statFile);
 
                 processes[*numProcesses].pid = pid;
-                processes[*numProcesses].cpu = (float)(utime + stime) / sysconf(_SC_CLK_TCK); // essa parte meu amigo me ajudou pq eu nao estava conseguindo processar o uso da cpu direito
+                processes[*numProcesses].cpu = (float)(utime + stime) / sysconf(_SC_CLK_TCK);
                 processes[*numProcesses].threads = threads;
 
                 // get do usuario
@@ -86,7 +87,7 @@ void fetchProcessList(Process *processes, int *numProcesses) {
                 FILE *commFile = fopen(path, "r");
                 if (commFile) {
                     fgets(processes[*numProcesses].name, sizeof(processes[*numProcesses].name), commFile);
-                    // Remover a nova linha no final do nome do processo
+                    // remove a nova linha no final do nome do processo
                     processes[*numProcesses].name[strcspn(processes[*numProcesses].name, "\n")] = 0;
                     fclose(commFile);
                 } else {
@@ -104,7 +105,7 @@ void fetchProcessList(Process *processes, int *numProcesses) {
 void writeProcessDataToJson(Process *processes, int numProcesses) {
     FILE *file = fopen("process_data.json", "w");
     if (!file) {
-        perror("Unable to open file");
+        perror("Não foi possível abrir");
         return;
     }
 

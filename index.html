@@ -4,50 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
-    <script>
-        function fetchData() {
-            fetch('process_data.json')
-                .then(response => response.json())
-                .then(data => {
-                    const processTable = document.getElementById('processTable');
-                    processTable.innerHTML = `
-                        <tr>
-                            <th>PID</th>
-                            <th>Usuário</th>
-                            <th>Nome</th>
-                            <th>CPU (%)</th>
-                            <th>Memória (KB)</th>
-                            <th>Threads</th>
-                        </tr>
-                    `;
-                    data.forEach(process => {
-                        processTable.innerHTML += `
-                            <tr onclick="viewDetails(${process.pid})">
-                                <td>${process.pid}</td>
-                                <td>${process.user}</td>
-                                <td>${process.name}</td>
-                                <td>${process.cpu.toFixed(2)}</td>
-                                <td>${process.memory.toFixed(2)}</td>
-                                <td>${process.threads}</td>
-                            </tr>
-                        `;
-                    });
-                });
-        }
-
-        function viewDetails(pid) {
-            window.location.href = `details.html?pid=${pid}`;
-        }
-
-        setInterval(fetchData, 5000);
-        window.onload = fetchData;
-    </script>
+    <link rel="shortcut icon" href="./img/favicon-32x32.png" type="image/x-icon">
+    <link rel="stylesheet" href="./css/styles.css">
+    <script src="./script/index.js"></script>
 </head>
 <body>
     <h1>Dashboard</h1>
     <table id="processTable" border="1">
-        <!-- dads aqui -->
     </table>
 </body>
 </html>
