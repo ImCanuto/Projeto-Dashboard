@@ -31,7 +31,6 @@ void getUserFromUid(uid_t uid, char *username) {
 }
 
 // fetch da lista de processos
-// essa parte meu amigo me ajudou pq eu não estava conseguindo acessar os dados necessários para gerar o JSON
 void fetchProcessList(Process *processes, int *numProcesses) {
     struct dirent *entry;
     DIR *dp = opendir("/proc");
@@ -101,7 +100,27 @@ void fetchProcessList(Process *processes, int *numProcesses) {
     closedir(dp);
 }
 
-// função que escreve os dados dos processos no JSON
+// função para obter o uso da CPU
+float getCPUUsage() {
+    FILE *file;
+    unsigned long long lastTotalUser, lastTotalUserLow, lastTotalSys, lastTotalIdle;
+    unsigned long long totalUser, totalUserLow, totalSys, totalIdle, total;
+
+    file = fopen("/proc/stat", "r");
+    fscanf(file, "cpu %llu %llu %llu %llu", &lastTotalUser, &lastTotalUserLow, &lastTotalSys, &lastTotalIdle);
+    fclose(file);
+
+    sleep(INTERVAL);
+
+    file = fopen("/proc/stat", "r");
+    fscanf(file, "cpu %llu %llu %llu %llu", &totalUser, &totalUserLow, &totalSys, &totalIdle);
+    fclose(file);
+
+    total = (totalUser - lastTotalUser) + (totalUserLow - lastTotalUserLow) + (totalSys - lastTotalSys);
+    return (total * 100.0) / (total + (totalIdle - lastTotalIdle));
+}
+
+// escreve os dados dos processos no JSON
 void writeProcessDataToJson(Process *processes, int numProcesses) {
     FILE *file = fopen("process_data.json", "w");
     if (!file) {
@@ -125,6 +144,33 @@ void writeProcessDataToJson(Process *processes, int numProcesses) {
     fclose(file);
 }
 
+// função que escreve as informações globais do sistema no JSON
+void writeGlobalInfoToJson() {
+    struct sysinfo info;
+    sysinfo(&info);
+
+    unsigned long totalMemoryMB = (info.totalram * info.mem_unit) / (1024 * 1024); // total memory in MB
+    unsigned long freeMemoryMB = (info.freeram * info.mem_unit) / (1024 * 1024);   // free memory in MB
+    float memoryUsage = 100.0 * (totalMemoryMB - freeMemoryMB) / totalMemoryMB;
+    float cpuUsage = getCPUUsage();
+
+    FILE *file = fopen("global_info.json", "w");
+    if (!file) {
+        perror("Unable to open file");
+        return;
+    }
+
+    fprintf(file, "{\n");
+    fprintf(file, "  \"uptime\": %ld,\n", info.uptime);
+    fprintf(file, "  \"totalMemoryMB\": %lu,\n", totalMemoryMB);
+    fprintf(file, "  \"freeMemory\": %.2f,\n", 100.0 - memoryUsage);
+    fprintf(file, "  \"cpuUsage\": %.2f,\n", cpuUsage);
+    fprintf(file, "  \"totalProcesses\": %d\n", info.procs);
+    fprintf(file, "}\n");
+
+    fclose(file);
+}
+
 // função que roda numa thread separada, adquire dados e atualiza no JSON
 void* dataAcquisition(void* arg) {
     while (1) {
@@ -133,6 +179,7 @@ void* dataAcquisition(void* arg) {
 
         fetchProcessList(processes, &numProcesses);
         writeProcessDataToJson(processes, numProcesses);
+        writeGlobalInfoToJson();
 
         sleep(INTERVAL);
     }

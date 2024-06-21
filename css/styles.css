@@ -84,6 +84,20 @@ th:last-child, td:last-child {
     border-bottom-right-radius: 10px;
 }
 
+/* Estilização das informações globais */
+#globalInfo {
+    width: 90%;
+    margin: 20px auto;
+    background-color: #fff;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+#globalInfo p {
+    margin: 5px 0;
+}
+
 @media (max-width: 600px) {
     table {
         width: 100%;
@@ -98,6 +112,15 @@ th:last-child, td:last-child {
     }
 
     td {
+        font-size: 14px;
+    }
+
+    #globalInfo {
+        width: 100%;
+        padding: 10px;
+    }
+
+    #globalInfo p {
         font-size: 14px;
     }
 }
