@@ -20,7 +20,7 @@ typedef struct {
     int threads;
 } Process;
 
-// get do usuario atraves do UID
+// get do usuário através do UID
 void getUserFromUid(uid_t uid, char *username) {
     struct passwd *pwd = getpwuid(uid);
     if (pwd) {
@@ -52,7 +52,7 @@ void fetchProcessList(Process *processes, int *numProcesses) {
                 processes[*numProcesses].cpu = (float)(utime + stime) / sysconf(_SC_CLK_TCK);
                 processes[*numProcesses].threads = threads;
 
-                // get do usuario
+                // get do usuário
                 sprintf(path, "/proc/%d/status", pid);
                 FILE *statusFile = fopen(path, "r");
                 if (statusFile) {
@@ -69,7 +69,7 @@ void fetchProcessList(Process *processes, int *numProcesses) {
                     strcpy(processes[*numProcesses].user, "unknown");
                 }
 
-                // get da memoria
+                // get da memória
                 sprintf(path, "/proc/%d/statm", pid);
                 FILE *statmFile = fopen(path, "r");
                 if (statmFile) {
@@ -100,7 +100,7 @@ void fetchProcessList(Process *processes, int *numProcesses) {
     closedir(dp);
 }
 
-// função para obter o uso da CPU
+// get do uso da CPU
 float getCPUUsage() {
     FILE *file;
     unsigned long long lastTotalUser, lastTotalUserLow, lastTotalSys, lastTotalIdle;
@@ -144,13 +144,13 @@ void writeProcessDataToJson(Process *processes, int numProcesses) {
     fclose(file);
 }
 
-// função que escreve as informações globais do sistema no JSON
+// escreve as informações globais do sistema no JSON
 void writeGlobalInfoToJson() {
     struct sysinfo info;
     sysinfo(&info);
 
-    unsigned long totalMemoryMB = (info.totalram * info.mem_unit) / (1024 * 1024); // total memory in MB
-    unsigned long freeMemoryMB = (info.freeram * info.mem_unit) / (1024 * 1024);   // free memory in MB
+    unsigned long totalMemoryMB = (info.totalram * info.mem_unit) / (1024 * 1024);
+    unsigned long freeMemoryMB = (info.freeram * info.mem_unit) / (1024 * 1024);
     float memoryUsage = 100.0 * (totalMemoryMB - freeMemoryMB) / totalMemoryMB;
     float cpuUsage = getCPUUsage();
 
@@ -171,7 +171,7 @@ void writeGlobalInfoToJson() {
     fclose(file);
 }
 
-// função que roda numa thread separada, adquire dados e atualiza no JSON
+// roda uma thread separada, adquire dados e atualiza no JSON
 void* dataAcquisition(void* arg) {
     while (1) {
         Process processes[1024];
@@ -191,7 +191,7 @@ int main() {
     // cria uma thread
     pthread_create(&thread_id, NULL, dataAcquisition, NULL);
 
-    // mantem a thread viva
+    // mantém a thread viva
     pthread_join(thread_id, NULL);
 
     return 0;

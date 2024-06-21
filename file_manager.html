@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Gerenciador de Arquivos</title>
     <link rel="shortcut icon" href="./img/favicon-32x32.png" type="image/x-icon">
     <link rel="stylesheet" href="./css/styles.css">
-    <script src="./script/index.js"></script>
+    <script src="./script/file_manager.js"></script>
 </head>
 <body>
     <div class="header">
-        <button class="btn" onclick="window.location.href='file_manager.html'">Gerenciador de Arquivos</button>
+        <button class="btn" onclick="window.location.href='index.html'">Voltar ao Dashboard</button>
     </div>
-    <h1>Dashboard</h1>
-    <div id="globalInfo"></div>
-    <table id="processTable" border="1"></table>
+    <h1>Gerenciador de Arquivos</h1>
+    <div id="fileSystemInfo" class="info-box"></div>
+    <div id="directoryTree" class="info-box"></div>
 </body>
 </html>

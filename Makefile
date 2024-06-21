@@ -1,47 +1,68 @@
-# Nome do executável
-TARGET = extract_data
+# Nome dos executáveis
+TARGET_A = extract_data
+TARGET_B = extract_file_data
 
-# Arquivo de código-fonte
-SRC = extract_data.c
+# Arquivos de código-fonte
+SRC_A = extract_data.c
+SRC_B = extract_file_data.c
 
 # Compilador e flags
 CC = gcc
 CFLAGS = -pthread
 
-# Comando Python
+# Comando Python e servidor HTTP
 PYTHON = python3
-SERVER_SCRIPT = server.py
+SERVER_SCRIPT_A = server.py
+SERVER_SCRIPT_B = -m http.server 8000
 
 # Regras padrão
 all: run
 
-# Regra para compilar o programa C
-$(TARGET): $(SRC)
-	$(CC) $(CFLAGS) -o $(TARGET) $(SRC)
+# Regras para compilar os programas C
+$(TARGET_A): $(SRC_A)
+	$(CC) $(CFLAGS) -o $(TARGET_A) $(SRC_A)
 
-# Regra para executar o programa C em segundo plano
-run: $(TARGET)
-	./$(TARGET) & echo $$! > extract_data.pid
+$(TARGET_B): $(SRC_B)
+	$(CC) $(CFLAGS) -o $(TARGET_B) $(SRC_B)
 
-# Regra para iniciar o servidor Python
+# Regras para executar os programas C em segundo plano
+run: $(TARGET_A) $(TARGET_B)
+	./$(TARGET_A) & echo $$! > $(TARGET_A).pid
+	./$(TARGET_B) & echo $$! > $(TARGET_B).pid
+
+# Regras para iniciar os servidores Python
 server:
-	$(PYTHON) $(SERVER_SCRIPT)
+	$(PYTHON) $(SERVER_SCRIPT_A) & echo $$! > server_a.pid
+	$(PYTHON) $(SERVER_SCRIPT_B) & echo $$! > server_b.pid
 
-# Regra para parar qualquer execução anterior e iniciar o servidor
+# Regra para parar qualquer execução anterior e iniciar os programas e servidores
 start: clean run server
 
 # Regra para limpar os arquivos compilados e parar processos
 clean:
-	-killall -q $(TARGET) || true
-	rm -f $(TARGET) extract_data.pid
+	-killall -q $(TARGET_A) $(TARGET_B) || true
+	rm -f $(TARGET_A) $(TARGET_A).pid $(TARGET_B) $(TARGET_B).pid server_a.pid server_b.pid
 
-# Regra para parar o programa C e o servidor Python
+# Regra para parar os programas C e os servidores Python
 stop:
-	@if [ -f extract_data.pid ]; then \
-		kill `cat extract_data.pid`; \
-		rm -f extract_data.pid; \
+	@if [ -f $(TARGET_A).pid ]; then \
+		kill `cat $(TARGET_A).pid`; \
+		rm -f $(TARGET_A).pid; \
 	fi
-	-pkill -f $(SERVER_SCRIPT)
+	@if [ -f $(TARGET_B).pid ]; then \
+		kill `cat $(TARGET_B).pid`; \
+		rm -f $(TARGET_B).pid; \
+	fi
+	@if [ -f server_a.pid ]; then \
+		kill `cat server_a.pid`; \
+		rm -f server_a.pid; \
+	fi
+	@if [ -f server_b.pid ]; then \
+		kill `cat server_b.pid`; \
+		rm -f server_b.pid; \
+	fi
+	-pkill -f $(SERVER_SCRIPT_A)
+	-pkill -f $(SERVER_SCRIPT_B)
 
-# Regra padrão para iniciar o servidor apenas
+# Regras padrão para iniciar o servidor apenas
 .PHONY: all clean start server stop
