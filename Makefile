@@ -36,7 +36,7 @@ server:
 	$(PYTHON) $(SERVER_SCRIPT_B) & echo $$! > server_b.pid
 
 # Regra para parar qualquer execução anterior e iniciar os programas e servidores
-start: clean run server
+start: stop clean run server
 
 # Regra para limpar os arquivos compilados e parar processos
 clean:

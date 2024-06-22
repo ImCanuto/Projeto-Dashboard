@@ -1,3 +1,5 @@
-/process_data.json
-/extract_data
-/global_info.json
+process_data.json
+extract_data
+global_info.json
+directory_tree.json
+file_system_info.json

@@ -57,7 +57,6 @@ th {
     letter-spacing: 0.1em;
 }
 
-
 tr:hover {
     background-color: #f1f1f1;
     cursor: pointer;
@@ -78,7 +77,7 @@ th:last-child, td:last-child {
     border-bottom-right-radius: 10px;
 }
 
-#globalInfo, #fileSystemInfo, #directoryTree {
+#globalInfo, #fileSystemInfo, #directoryTree, #details {
     width: 90%;
     margin: 20px auto;
     background-color: #fff;
@@ -119,11 +118,52 @@ li.directory {
     font-weight: 700;
     outline: none;
     position: relative;
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
     transition: all 0.3s;
     background-color: #008cc8;
-  }
+}
+
+.btn:hover {
+    background-color: #0075a7;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    padding: 5px 0;
+    cursor: pointer;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+li:last-child {
+    border-bottom: none;
+}
+
+li.directory, li.file {
+    position: relative;
+    font-weight: bold;
+    color: #008cc8;
+}
+
+ul.file-details {
+    padding-left: 20px;
+    font-size: 14px;
+    color: #555;
+    display: none;
+}
+
+ul.file-details li {
+    padding: 2px 0;
+    cursor: default;
+}
+
+ul.file-details li span {
+    font-weight: normal;
+    color: #333;
+}
 
 @media (max-width: 600px) {
     table {
@@ -142,7 +182,7 @@ li.directory {
         font-size: 14px;
     }
 
-    #globalInfo, #fileSystemInfo, #directoryTree {
+    #globalInfo, #fileSystemInfo, #directoryTree, #details {
         width: 100%;
         padding: 10px;
     }

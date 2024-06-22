@@ -6,7 +6,7 @@ function formatUptime(seconds) {
     return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
-// fetch das informações globais do sistema
+// fetch das informações globais do sistema e criação da estrutura HTML
 function fetchGlobalInfo() {
     fetch('global_info.json')
         .then(response => response.json())

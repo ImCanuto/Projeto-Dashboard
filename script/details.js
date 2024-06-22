@@ -1,4 +1,4 @@
-// get dos parâmetros de uma página específica 
+// get dos parâmetros de uma página específica, permitindo percorrê-los como um array
 function getQueryParameter(name) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(name);
@@ -25,7 +25,7 @@ function fetchProcessDetails(pid) {
         });
 }
 
-// método que chama os outros métodos com os dados de acordo com o PID escolhido
+// chama os métodos com os dados do PID escolhido
 window.onload = () => {
     const pid = getQueryParameter('pid');
     if (pid) {
