@@ -10,10 +10,9 @@ SRC_B = extract_file_data.c
 CC = gcc
 CFLAGS = -pthread
 
-# Comando Python e servidor HTTP
+# Comando Python e script do servidor
 PYTHON = python3
-SERVER_SCRIPT_A = server.py
-SERVER_SCRIPT_B = -m http.server 8000
+SERVER_SCRIPT = server.py
 
 # Regras padrão
 all: run
@@ -30,10 +29,9 @@ run: $(TARGET_A) $(TARGET_B)
 	./$(TARGET_A) & echo $$! > $(TARGET_A).pid
 	./$(TARGET_B) & echo $$! > $(TARGET_B).pid
 
-# Regras para iniciar os servidores Python
+# Regras para iniciar o servidor Python
 server:
-	$(PYTHON) $(SERVER_SCRIPT_A) & echo $$! > server_a.pid
-	$(PYTHON) $(SERVER_SCRIPT_B) & echo $$! > server_b.pid
+	$(PYTHON) $(SERVER_SCRIPT) & echo $$! > server.pid
 
 # Regra para parar qualquer execução anterior e iniciar os programas e servidores
 start: stop clean run server
@@ -41,9 +39,9 @@ start: stop clean run server
 # Regra para limpar os arquivos compilados e parar processos
 clean:
 	-killall -q $(TARGET_A) $(TARGET_B) || true
-	rm -f $(TARGET_A) $(TARGET_A).pid $(TARGET_B) $(TARGET_B).pid server_a.pid server_b.pid
+	rm -f $(TARGET_A) $(TARGET_A).pid $(TARGET_B) $(TARGET_B).pid server.pid
 
-# Regra para parar os programas C e os servidores Python
+# Regra para parar os programas C e o servidor Python
 stop:
 	@if [ -f $(TARGET_A).pid ]; then \
 		kill `cat $(TARGET_A).pid`; \
@@ -53,16 +51,11 @@ stop:
 		kill `cat $(TARGET_B).pid`; \
 		rm -f $(TARGET_B).pid; \
 	fi
-	@if [ -f server_a.pid ]; then \
-		kill `cat server_a.pid`; \
-		rm -f server_a.pid; \
+	@if [ -f server.pid ]; then \
+		kill `cat server.pid`; \
+		rm -f server.pid; \
 	fi
-	@if [ -f server_b.pid ]; then \
-		kill `cat server_b.pid`; \
-		rm -f server_b.pid; \
-	fi
-	-pkill -f $(SERVER_SCRIPT_A)
-	-pkill -f $(SERVER_SCRIPT_B)
+	-pkill -f $(SERVER_SCRIPT)
 
 # Regras padrão para iniciar o servidor apenas
 .PHONY: all clean start server stop

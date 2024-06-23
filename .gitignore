@@ -3,3 +3,4 @@ extract_data
 global_info.json
 directory_tree.json
 file_system_info.json
+current_path.txt

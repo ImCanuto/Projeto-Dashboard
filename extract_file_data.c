@@ -16,7 +16,7 @@
 #define DT_DIR 4
 #endif
 
-#define INTERVAL 5 // tempo de atualização
+#define INTERVAL 1 // tempo de atualização
 
 typedef struct {
     char partition[256];
@@ -212,13 +212,21 @@ int main() {
     pthread_t tid;
     pthread_create(&tid, NULL, monitorSystem, NULL);
 
-    // fiz dentro da main pois ao tentar criar outro monitor o código quebrava por algum motivo
-    // gera e atualiza a lista do diretório raiz "/"
+    char path[1024] = "/";
+    // fiz dentro da main pq não consegui adicionar outro monitor
+    // lê o arquivo com o path clicado e atualiza a árvore de diretórios
     while (1) {
-        writeDirectoryContentsToJson("/");
+        FILE *pathFile = fopen("current_path.txt", "r");
+        if (pathFile) {
+            fgets(path, sizeof(path), pathFile);
+            path[strcspn(path, "\n")] = 0;  // remove o \n para evitar problemas
+            fclose(pathFile);
+        }
+        writeDirectoryContentsToJson(path);
         sleep(INTERVAL);
     }
 
     pthread_join(tid, NULL);
     return 0;
 }
+

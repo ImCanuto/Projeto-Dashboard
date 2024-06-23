@@ -165,6 +165,20 @@ ul.file-details li span {
     color: #333;
 }
 
+.detailsUl .file , .directory{
+    margin-top: 20px;
+}
+
+.detailsUl .directory ul{
+    list-style: none;
+    color: gray;
+    font-size: 12px;
+}
+
+.detailsUl .file ul{
+    display: none;
+}
+
 @media (max-width: 600px) {
     table {
         width: 100%;

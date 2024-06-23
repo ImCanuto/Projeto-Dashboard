@@ -9,7 +9,7 @@
 #include <sys/sysinfo.h>
 #include <pthread.h>
 
-#define INTERVAL 5 // tempo de atualização
+#define INTERVAL 1 // tempo de atualização
 
 typedef struct {
     int pid;

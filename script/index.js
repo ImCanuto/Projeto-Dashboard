@@ -58,11 +58,12 @@ function viewDetails(pid) {
     window.location.href = `details.html?pid=${pid}`;
 }
 
-// atualização dos dados a cada 5s
+// atualização dos dados a cada 2s
 setInterval(() => {
     fetchData();
     fetchGlobalInfo();
-}, 5000);
+}, 2000);
+// executa tudo ao carregar a tela
 window.onload = () => {
     fetchData();
     fetchGlobalInfo();
