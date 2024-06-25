@@ -171,7 +171,7 @@ void writeGlobalInfoToJson() {
     fclose(file);
 }
 
-// roda uma thread separada, adquire dados e atualiza no JSON
+// thread que adquire dados e atualiza no JSON
 void* dataAcquisition(void* arg) {
     while (1) {
         Process processes[1024];

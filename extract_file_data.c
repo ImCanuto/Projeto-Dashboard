@@ -57,7 +57,7 @@ void fetchFileSystemInfo(FileSystemInfo *info, int *numPartitions) {
             if (info[*numPartitions].totalSize > 0) {
                 info[*numPartitions].usagePercent = (float)info[*numPartitions].usedSize * 100 / info[*numPartitions].totalSize;
             } else {
-                info[*numPartitions].usagePercent = 0.0; // ou algum valor padrão que faça sentido no contexto
+                info[*numPartitions].usagePercent = 0.0;
             }
 
             (*numPartitions)++;
@@ -199,10 +199,22 @@ void writeDirectoryContentsToJson(const char *path) {
     fclose(file);
 }
 
-// atualização do json do sistema
+// monitor do sistema que garante a atualização dos jsons
 void *monitorSystem(void *arg) {
+    char path[1024] = "/";
+
     while (1) {
+        // lê o current_path e atualiza o directory_tree com o diretório clicado pelo usuário
+        FILE *pathFile = fopen("current_path.txt", "r");
+        if (pathFile) {
+            fgets(path, sizeof(path), pathFile);
+            path[strcspn(path, "\n")] = 0;  // remove o \n para evitar problemas
+            fclose(pathFile);
+        }
+
+        writeDirectoryContentsToJson(path);
         writeFileSystemInfoToJson();
+
         sleep(INTERVAL);
     }
     return NULL;
@@ -211,20 +223,6 @@ void *monitorSystem(void *arg) {
 int main() {
     pthread_t tid;
     pthread_create(&tid, NULL, monitorSystem, NULL);
-
-    char path[1024] = "/";
-    // fiz dentro da main pq não consegui adicionar outro monitor
-    // lê o arquivo com o path clicado e atualiza a árvore de diretórios
-    while (1) {
-        FILE *pathFile = fopen("current_path.txt", "r");
-        if (pathFile) {
-            fgets(path, sizeof(path), pathFile);
-            path[strcspn(path, "\n")] = 0;  // remove o \n para evitar problemas
-            fclose(pathFile);
-        }
-        writeDirectoryContentsToJson(path);
-        sleep(INTERVAL);
-    }
 
     pthread_join(tid, NULL);
     return 0;

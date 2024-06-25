@@ -179,6 +179,10 @@ ul.file-details li span {
     display: none;
 }
 
+.detailsUl li:hover{
+    background-color: rgb(240, 240, 240);
+}
+
 @media (max-width: 600px) {
     table {
         width: 100%;
